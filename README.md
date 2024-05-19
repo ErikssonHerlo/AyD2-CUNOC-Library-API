@@ -15,8 +15,7 @@ Este proyecto es el backend de la API REST para la gestión de una biblioteca en
 - **Spring Boot**: Framework principal para la construcción del backend.
 - **JWT**: Para la autenticación y autorización.
 - **JPA/Hibernate**: Para la persistencia de datos.
-- **MySQL**: Base de datos relacionagst
-- l.
+- **MySQL**: Base de datos relacional.
 - **Maven**: Gestión de dependencias.
 
 ## Requisitos Previos
