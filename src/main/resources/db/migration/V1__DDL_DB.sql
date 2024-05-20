@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.BOOK (
     status ENUM('available', 'not_available') NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (ISBN_code))
-    ENGINE = InnoDB;
+    PRIMARY KEY (ISBN_code));
+    
 
 
 -- -----------------------------------------------------
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.CARREER (
     name VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (code))
-    ENGINE = InnoDB;
+    PRIMARY KEY (code));
+    
 
 
 -- -----------------------------------------------------
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.USER (
     FOREIGN KEY (CARREER_code)
     REFERENCES CUNOC_LIBRARY.CARREER (code)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
+    
 
 
 -- -----------------------------------------------------
@@ -75,8 +75,8 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.LOAN (
     FOREIGN KEY (BOOK_ISBN_code)
     REFERENCES CUNOC_LIBRARY.BOOK (ISBN_code)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
+    
 
 
 -- -----------------------------------------------------
@@ -102,8 +102,8 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.RESERVATION (
     FOREIGN KEY (BOOK_ISBN_code)
     REFERENCES CUNOC_LIBRARY.BOOK (ISBN_code)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
+    
 
 
 -- -----------------------------------------------------
@@ -114,34 +114,18 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.PAYMENT (
                                                          LOAN_id INT NOT NULL,
                                                          payment_amount DECIMAL(8,2) NULL,
     payment_date DATETIME NULL,
+    default_amount DECIMAL(8,2) NULL,
+    register_date DATETIME NULL,
+    total_amount VARCHAR(45) NULL,
+    status ENUM('paid', 'pending') NULL,
     PRIMARY KEY (id),
     INDEX fk_PAYMENT_LOAN1_idx (LOAN_id ASC) VISIBLE,
     CONSTRAINT fk_PAYMENT_LOAN1
     FOREIGN KEY (LOAN_id)
     REFERENCES CUNOC_LIBRARY.LOAN (id)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table CUNOC_LIBRARY.DEFAULT
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.DEFAULT (
-                                                         id INT NOT NULL AUTO_INCREMENT,
-                                                         LOAN_id INT NOT NULL,
-                                                         default_amount DECIMAL(8,2) NULL,
-    register_date DATETIME NULL,
-    status ENUM('paid', 'pending') NULL,
-    PRIMARY KEY (id),
-    INDEX fk_DEFAULT_LOAN1_idx (LOAN_id ASC) VISIBLE,
-    CONSTRAINT fk_DEFAULT_LOAN1
-    FOREIGN KEY (LOAN_id)
-    REFERENCES CUNOC_LIBRARY.LOAN (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
-
+    ON UPDATE NO ACTION);
+    
 
 -- -----------------------------------------------------
 -- Table CUNOC_LIBRARY.NOTIFICATION
@@ -151,17 +135,15 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.NOTIFICATION (
                                                               USER_username VARCHAR(255) NOT NULL,
     message VARCHAR(255) NULL,
     status ENUM('read', 'not_read') NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME NULL,
     LOAN_id INT NULL,
     RESERVATION_id INT NULL,
     PAYMENT_id INT NULL,
-    DEFAULT_id INT NULL,
     PRIMARY KEY (id),
     INDEX fk_NOTIFICATION_USER1_idx (USER_username ASC) VISIBLE,
     INDEX fk_NOTIFICATION_LOAN1_idx (LOAN_id ASC) VISIBLE,
     INDEX fk_NOTIFICATION_RESERVATION1_idx (RESERVATION_id ASC) VISIBLE,
     INDEX fk_NOTIFICATION_PAYMENT1_idx (PAYMENT_id ASC) VISIBLE,
-    INDEX fk_NOTIFICATION_DEFAULT1_idx (DEFAULT_id ASC) VISIBLE,
     CONSTRAINT fk_NOTIFICATION_USER1
     FOREIGN KEY (USER_username)
     REFERENCES CUNOC_LIBRARY.USER (username)
@@ -181,10 +163,5 @@ CREATE TABLE IF NOT EXISTS CUNOC_LIBRARY.NOTIFICATION (
     FOREIGN KEY (PAYMENT_id)
     REFERENCES CUNOC_LIBRARY.PAYMENT (id)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-    CONSTRAINT fk_NOTIFICATION_DEFAULT1
-    FOREIGN KEY (DEFAULT_id)
-    REFERENCES CUNOC_LIBRARY.DEFAULT (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
+    
