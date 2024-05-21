@@ -1,6 +1,5 @@
 package com.cunoc.library.adapters.out.entities;
 
-import com.cunoc.library.adapters.out.entities.CarreerEntity;
 import com.cunoc.library.domain.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,7 +29,7 @@ public class UserEntity implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "CARREER_code", nullable = true)
-    private CarreerEntity carreer;
+    private CareerEntity carreer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

@@ -4,6 +4,7 @@ import com.cunoc.library.adapters.out.entities.UserEntity;
 import com.cunoc.library.application.dao.UserDAO;
 import com.cunoc.library.adapters.out.repositories.UserRepository;
 import com.cunoc.library.application.dto.RegisterDTO;
+import com.cunoc.library.application.dto.UserResponseDTO;
 import com.cunoc.library.domain.models.User;
 import com.cunoc.library.domain.models.Carreer;
 import lombok.RequiredArgsConstructor;
@@ -28,78 +29,75 @@ public class UserDAOAdapter implements UserDAO {
 
     @Override
     public Optional<UserEntity> find(String username) {
-        return userRepository.findUserByUsername(username);
+        return userRepository.findById(username);
     }
 
     @Override
-    public Optional<User> findUserByUsername(String username) {
-        Optional<UserEntity> userEntityOptional = userRepository.findUserByUsername(username);
-        return userEntityOptional.map(this::mapToDomain
-        );
+    public Optional<UserResponseDTO> findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).map(this::mapToResponseDTO);
     }
 
     @Override
-    public List<User> getUserByRoleAndName(String roleName, String name) {
+    public List<UserResponseDTO> getUserByRoleAndName(String roleName, String name) {
         return userRepository.getUserByRoleAndName(roleName, name)
                 .stream()
-                .map(this::mapToDomain)
+                .map(this::mapToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> getUsersByRole(String roleName) {
+    public List<UserResponseDTO> getUsersByRole(String roleName) {
         return userRepository.getUsersByRole(roleName)
                 .stream()
-                .map(this::mapToDomain)
+                .map(this::mapToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<User> findAllUsers(Pageable pageable) {
-        Page<UserEntity> userEntitiesPage = userRepository.findAll(pageable);
-        List<User> users = userEntitiesPage
-                .map(userEntity ->
-                    new User(
-                        userEntity.getUsername(),
-                        userEntity.getFullName(),
-                        userEntity.getCarreer() != null ? new Carreer(userEntity.getCarreer()) : null,
-                        userEntity.getRole(),
-                        userEntity.getDob(),
-                        userEntity.getPassword(),
-                        userEntity.getCreatedAt(),
-                        userEntity.getUpdatedAt(),
-                        userEntity.getAuthorities()
-                    )
-                )
-                .toList();
-
-        return new PageImpl<>(users, pageable, userEntitiesPage.getTotalElements());
+    public Page<UserResponseDTO> findAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(this::mapToResponseDTO);
     }
 
     @Override
-    public User saveUser(RegisterDTO userDTO, PasswordEncoder passwordEncoder) {
+    public UserResponseDTO saveUser(RegisterDTO userDTO, PasswordEncoder passwordEncoder) {
+        /*
+        CarreerEntity carreerEntity = null;
+        if (userDTO.carreerCode() != null && !userDTO.carreerCode().isEmpty()) {
+            carreerEntity = carreerRepository.findById(userDTO.carreerCode())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid carreer code: " + userDTO.carreerCode()));
+        }*/
 
         UserEntity userEntity = UserEntity.builder()
                 .username(userDTO.username())
                 .fullName(userDTO.full_name())
-                .carreer(null) // Maneja esto según tu lógica de negocio
+                .carreer(null) // Set the carreer entity if it exists
                 .role(userDTO.role())
                 .dob(userDTO.dob())
                 .password(passwordEncoder.encode(userDTO.password()))
                 .build();
 
         userRepository.save(userEntity);
-        return new User(userEntity);
+        return mapToResponseDTO(userEntity);
     }
 
     @Override
-    public void updateUser(UserEntity userEntity, RegisterDTO input, PasswordEncoder passwordEncoder) {
+    public UserResponseDTO updateUser(UserEntity userEntity, RegisterDTO input, PasswordEncoder passwordEncoder) {
+        /*
+        CarreerEntity carreerEntity = null;
+        if (input.carreerCode() != null && !input.carreerCode().isEmpty()) {
+            carreerEntity = carreerRepository.findById(input.carreerCode())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid carreer code: " + input.carreerCode()));
+        }
+
+         */
+
         userEntity.setFullName(input.full_name());
-        userEntity.setCarreer(null); // Maneja esto según tu lógica de negocio
+        userEntity.setCarreer(null); // Set the carreer entity if it exists
         userEntity.setRole(input.role());
         userEntity.setDob(input.dob());
         userEntity.setPassword(passwordEncoder.encode(input.password()));
         userRepository.save(userEntity);
+        return mapToResponseDTO(userEntity);
     }
 
     @Override
@@ -107,20 +105,16 @@ public class UserDAOAdapter implements UserDAO {
         userRepository.deleteById(username);
     }
 
-    private User mapToDomain(UserEntity userEntity) {
-        return new User(
+    private UserResponseDTO mapToResponseDTO(UserEntity userEntity) {
+        return new UserResponseDTO(
                 userEntity.getUsername(),
                 userEntity.getFullName(),
-                userEntity.getCarreer() != null ? new Carreer(userEntity.getCarreer()) : null,
+                null, // Asignar valor apropiado si se agrega campo last_name en UserEntity
+                userEntity.getCarreer() != null ? userEntity.getCarreer().getCode() : null,
                 userEntity.getRole(),
                 userEntity.getDob(),
-                userEntity.getPassword(),
                 userEntity.getCreatedAt(),
-                userEntity.getUpdatedAt(),
-                userEntity.getAuthorities()
+                userEntity.getUpdatedAt()
         );
     }
-
-
-
 }

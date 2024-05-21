@@ -1,6 +1,6 @@
 package com.cunoc.library.domain.models;
 
-import com.cunoc.library.adapters.out.entities.CarreerEntity;
+import com.cunoc.library.adapters.out.entities.CareerEntity;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ public record Carreer (
         Date createdAt,
         Date updatedAt
 ) {
-    public Carreer(CarreerEntity carreerEntity) {
+    public Carreer(CareerEntity carreerEntity) {
         this(
                 carreerEntity.getCode(),
                 carreerEntity.getName(),

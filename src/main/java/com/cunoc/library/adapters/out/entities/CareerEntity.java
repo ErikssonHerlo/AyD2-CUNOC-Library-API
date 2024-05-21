@@ -6,13 +6,13 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "CARREER")
+@Table(name = "CAREER")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarreerEntity {
+public class CareerEntity {
 
     @Id
     @Column(name = "code", nullable = false)
