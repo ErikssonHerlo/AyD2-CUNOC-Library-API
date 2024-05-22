@@ -49,9 +49,24 @@ public class CareerController {
     public PaginatedResponse<List<CareerResponseDTO>> getAllCareers(@PageableDefault(page = 0,size = 10) Pageable pageable)
     {
         Page<CareerResponseDTO> careerPage = careerUseCase.findAll(pageable);
-        return new PaginatedResponse<>(HttpStatus.OK.value(),"Success", HttpStatus.OK,careerPage.getContent(),careerPage.getPageable());
+        return new PaginatedResponse<>(
+                HttpStatus.OK.value(),"Success",
+                HttpStatus.OK,careerPage.getContent(),
+                careerPage.getPageable(),
+                careerPage.isLast(),
+                careerPage.isFirst(),
+                careerPage.hasNext(),
+                careerPage.hasPrevious(),
+                careerPage.getTotalPages(),
+                (int) careerPage.getTotalElements());
     }
 
+    @PreAuthorize("hasAuthority('librarian')")
+    @GetMapping("/all")
+    public ApiResponse<List<CareerResponseDTO>> getAllCareers()
+    {
+        return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,careerUseCase.findAll());
+    }
     @PreAuthorize("hasAuthority('librarian')")
     @PutMapping("/{code}")
     public ApiResponse<CareerResponseDTO> updateCareer(@PathVariable String code, @RequestBody @Valid CareerUpdateDTO request)
