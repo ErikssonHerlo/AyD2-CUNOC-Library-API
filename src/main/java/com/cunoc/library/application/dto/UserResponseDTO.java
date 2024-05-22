@@ -10,7 +10,7 @@ import java.util.Date;
 public record UserResponseDTO (
         String username,
         String full_name,
-        String last_name,
+
         String career_code, // Career code as a string since it's optional
 
         Role role,

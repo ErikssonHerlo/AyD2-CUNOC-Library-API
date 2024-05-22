@@ -1,7 +1,9 @@
 package com.cunoc.library.application.usecases;
 
+import com.cunoc.library.application.dao.CareerDAO;
 import com.cunoc.library.application.dto.RegisterDTO;
 import com.cunoc.library.application.dto.UserResponseDTO;
+import com.cunoc.library.application.dto.UserUpdateDTO;
 import com.cunoc.library.domain.models.User;
 import com.cunoc.library.application.dao.UserDAO;
 import com.cunoc.library.infraestructure.exceptions.BadRequestException;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserUseCase {
     private final UserDAO userDao;
+    private final CareerDAO careerDAO;
     private final PasswordEncoder passwordEncoder;
 
     public Optional<UserResponseDTO> getUserInfo(Authentication authentication){
@@ -49,12 +52,17 @@ public class UserUseCase {
     }
 
     public UserResponseDTO saveUser(RegisterDTO request) {
+        if(request.career_code()!= null && request.career_code().isEmpty())
+        {
+            var careerExists = careerDAO.find(request.career_code()).isPresent();
+            if(careerExists) throw new ResourceNotFoundException("career", "career_code", request.career_code());
+        }
         var isPresent = userDao.findUserByUsername(request.username()).isPresent();
         if(isPresent) throw new ResourceAlreadyExistsException("user","username",request.username());
         return userDao.saveUser(request,passwordEncoder);
     }
 
-    public UserResponseDTO updateUser(String username, RegisterDTO updateUserDTO) throws ResourceNotFoundException {
+    public UserResponseDTO updateUser(String username, UserUpdateDTO updateUserDTO) throws ResourceNotFoundException {
         try{
             var existingUser = userDao.find(username);
             if(!existingUser.isPresent()) throw new ResourceNotFoundException("user","username",username);
