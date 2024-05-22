@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/user")
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
     private final UserUseCase userUseCase;
 
 
-    @CrossOrigin(origins = "", allowedHeaders = "")
+
     @GetMapping("/info")
     public ApiResponse<UserResponseDTO> getUserInfo(Authentication authentication){
         return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.getUserInfo(authentication));
