@@ -12,8 +12,8 @@ import java.util.Arrays;
 @Configuration
 public class CORSConfiguration {
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
+    @Value("${frontend.url:http://localhost:5173}")
+    public String frontendUrl;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -21,6 +21,7 @@ public class CORSConfiguration {
         configuration.setAllowedOrigins(Arrays.asList(frontendUrl));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
+
         configuration.setAllowCredentials(true); // Si necesitas permitir cookies y credenciales
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
