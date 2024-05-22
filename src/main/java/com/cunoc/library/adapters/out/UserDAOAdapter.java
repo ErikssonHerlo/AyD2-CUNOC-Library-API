@@ -70,7 +70,7 @@ public class UserDAOAdapter implements UserDAO {
         UserEntity userEntity = UserEntity.builder()
                 .username(userDTO.username())
                 .fullName(userDTO.full_name())
-                .carreer(null) // Set the carreer entity if it exists
+                .career(null) // Set the carreer entity if it exists
                 .role(userDTO.role())
                 .dob(userDTO.dob())
                 .password(passwordEncoder.encode(userDTO.password()))
@@ -92,7 +92,7 @@ public class UserDAOAdapter implements UserDAO {
          */
 
         userEntity.setFullName(input.full_name());
-        userEntity.setCarreer(null); // Set the carreer entity if it exists
+        userEntity.setCareer(null); // Set the carreer entity if it exists
         userEntity.setRole(input.role());
         userEntity.setDob(input.dob());
         userEntity.setPassword(passwordEncoder.encode(input.password()));
@@ -110,7 +110,7 @@ public class UserDAOAdapter implements UserDAO {
                 userEntity.getUsername(),
                 userEntity.getFullName(),
                 null, // Asignar valor apropiado si se agrega campo last_name en UserEntity
-                userEntity.getCarreer() != null ? userEntity.getCarreer().getCode() : null,
+                userEntity.getCareer() != null ? userEntity.getCareer().getCode() : null,
                 userEntity.getRole(),
                 userEntity.getDob(),
                 userEntity.getCreatedAt(),

@@ -4,6 +4,7 @@ import com.cunoc.library.adapters.out.CareerDAOAdapter;
 import com.cunoc.library.application.dao.CareerDAO;
 import com.cunoc.library.application.dto.CareerDTO;
 import com.cunoc.library.application.dto.CareerResponseDTO;
+import com.cunoc.library.infraestructure.exceptions.ResourceAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,10 @@ public class CareerUseCase {
     }
 
     public CareerResponseDTO save(CareerDTO careerRequestDTO) {
+        var is_exist = careerDAO.find(careerRequestDTO.code());
+        if (is_exist.isPresent()) {
+            throw new ResourceAlreadyExistsException("Career", "code", careerRequestDTO.code());
+        }
         return careerDAO.save(careerRequestDTO);
 
     }

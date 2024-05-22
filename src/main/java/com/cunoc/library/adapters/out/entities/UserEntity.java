@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "user")
 @Getter
 @Setter
 @Builder
@@ -28,8 +28,8 @@ public class UserEntity implements UserDetails {
     private String fullName;
 
     @ManyToOne
-    @JoinColumn(name = "CARREER_code", nullable = true)
-    private CareerEntity carreer;
+    @JoinColumn(name = "CAREER_code", nullable = true)
+    private CareerEntity career;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

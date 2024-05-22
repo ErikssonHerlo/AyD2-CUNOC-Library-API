@@ -1,1 +1,2 @@
-INSERT INTO `USER` VALUES ('admin','Usuario Bibliotecario ', NULL ,'librarian','2000-01-01','$2a$10$ai.8/4uTpppm.YvDURtHhexHo4RAC5WpqZsbe.jy1JfT4Vy2XC/1a','2024-05-01 15:02:27','2024-05-04 15:02:27');
+INSERT INTO `user` VALUES ('admin','Usuario Bibliotecario ', NULL ,'librarian','2000-01-01','$2a$10$ai.8/4uTpppm.YvDURtHhexHo4RAC5WpqZsbe.jy1JfT4Vy2XC/1a','2024-05-01 15:02:27','2024-05-04 15:02:27');
+INSERT INTO `user` VALUES ('201830459','Usuario Estudiante', NULL ,'student','2000-01-01','$2a$10$ai.8/4uTpppm.YvDURtHhexHo4RAC5WpqZsbe.jy1JfT4Vy2XC/1a','2024-05-01 15:02:27','2024-05-04 15:02:27');
