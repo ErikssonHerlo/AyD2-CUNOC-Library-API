@@ -15,6 +15,7 @@ public class AuthController {
 
     private final AuthUseCase authUseCase;
 
+    @CrossOrigin()
     @PostMapping(value = "login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginDTO request)
     {
