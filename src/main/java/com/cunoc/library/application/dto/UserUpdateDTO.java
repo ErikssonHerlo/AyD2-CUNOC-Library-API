@@ -1,13 +1,11 @@
 package com.cunoc.library.application.dto;
 
 import com.cunoc.library.domain.models.enums.Role;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-import jakarta.validation.constraints.*;
-
-public record RegisterDTO(
-        @NotNull(message = "El username/carne es obligatorio")
-        @Size(min = 3, max = 255, message = "El nombre de usuario debe tener entre 3 y 255 caracteres")
-        String username,
+public record UserUpdateDTO(
 
         @NotNull(message = "El nombre completo es obligatorio")
         @Size(min = 3, max = 255, message = "El nombre completo debe tener entre 3 y 255 caracteres")

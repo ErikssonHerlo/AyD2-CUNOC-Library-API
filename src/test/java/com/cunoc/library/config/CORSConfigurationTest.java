@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;gst
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;

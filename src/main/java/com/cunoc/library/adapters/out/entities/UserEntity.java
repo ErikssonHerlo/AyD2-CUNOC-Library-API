@@ -28,7 +28,7 @@ public class UserEntity implements UserDetails {
     private String fullName;
 
     @ManyToOne
-    @JoinColumn(name = "CAREER_code", nullable = true)
+    @JoinColumn(name = "career_code", nullable = true)
     private CareerEntity career;
 
     @Enumerated(EnumType.STRING)

@@ -3,6 +3,7 @@ package com.cunoc.library.application.dao;
 import com.cunoc.library.adapters.out.entities.UserEntity;
 import com.cunoc.library.application.dto.RegisterDTO;
 import com.cunoc.library.application.dto.UserResponseDTO;
+import com.cunoc.library.application.dto.UserUpdateDTO;
 import com.cunoc.library.domain.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,6 @@ public interface UserDAO {
     List<UserResponseDTO> getUsersByRole(String roleName);
     Page<UserResponseDTO> findAllUsers(Pageable pageable);
     UserResponseDTO saveUser(RegisterDTO user, PasswordEncoder passwordEncoder);
-    UserResponseDTO updateUser(UserEntity user, RegisterDTO input, PasswordEncoder passwordEncoder);
+    UserResponseDTO updateUser(UserEntity user, UserUpdateDTO input, PasswordEncoder passwordEncoder);
     void deleteUser(String username);
 }
