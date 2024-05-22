@@ -9,14 +9,14 @@ import org.springframework.http.HttpStatus;
 @Builder
 @NoArgsConstructor
 public class PaginatedResponse<T> {
-    private Integer httpCode;
+    private Integer code;
     private String message;
     private HttpStatus status;
     private T data;
     private Pageable pageable;
 
-    public PaginatedResponse(Integer httpCode, String message, HttpStatus status, T data, Pageable pageable) {
-        this.httpCode = httpCode;
+    public PaginatedResponse(Integer code, String message, HttpStatus status, T data, Pageable pageable) {
+        this.code = code;
         this.message = message;
         this.status = status;
         this.data = data;
