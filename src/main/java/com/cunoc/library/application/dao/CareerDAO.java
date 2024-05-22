@@ -4,6 +4,7 @@ import com.cunoc.library.adapters.out.entities.CareerEntity;
 import com.cunoc.library.adapters.out.entities.UserEntity;
 import com.cunoc.library.application.dto.CareerResponseDTO;
 import com.cunoc.library.application.dto.CareerDTO;
+import com.cunoc.library.application.dto.CareerUpdateDTO;
 import com.cunoc.library.application.dto.RegisterDTO;
 import com.cunoc.library.domain.models.User;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,6 @@ public interface CareerDAO {
     List<CareerResponseDTO> findAll();
     Page<CareerResponseDTO> findAll(Pageable pageable);
     CareerResponseDTO save(CareerDTO career);
-    CareerResponseDTO update(String code, CareerDTO career);
+    CareerResponseDTO update(String code, CareerUpdateDTO career);
     void deleteById(String code);
 }

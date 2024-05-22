@@ -5,6 +5,7 @@ import com.cunoc.library.adapters.out.repositories.CareerRepository;
 import com.cunoc.library.application.dao.CareerDAO;
 import com.cunoc.library.application.dto.CareerDTO;
 import com.cunoc.library.application.dto.CareerResponseDTO;
+import com.cunoc.library.application.dto.CareerUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,9 +52,10 @@ public class CareerDAOAdapter implements CareerDAO {
     }
 
     @Override
-    public CareerResponseDTO update(String code, CareerDTO careerDTO) {
-        CareerEntity careerEntity = mapToEntity(careerDTO);
+    public CareerResponseDTO update(String code, CareerUpdateDTO careerUpdateDTO) {
+        CareerEntity careerEntity = mapToEntity(careerUpdateDTO);
         careerEntity.setCode(code);
+        careerEntity.setName(careerUpdateDTO.name());
         return mapToResponseDTO(careerRepository.save(careerEntity));
     }
 
@@ -75,6 +77,16 @@ public class CareerDAOAdapter implements CareerDAO {
         return CareerEntity.builder()
                 .code(careerDTO.code())
                 .name(careerDTO.name())
+                .createdAt(new Date())
+                .updatedAt(new Date())
+                .build();
+    }
+
+    private CareerEntity mapToEntity(CareerUpdateDTO careerDTO) {
+        return CareerEntity.builder()
+                .name(careerDTO.name())
+                .createdAt(new Date())
+                .updatedAt(new Date())
                 .build();
     }
 }

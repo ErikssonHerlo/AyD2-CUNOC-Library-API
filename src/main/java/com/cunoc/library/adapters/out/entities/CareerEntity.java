@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "CAREER")
+@Table(name = "career")
 @Getter
 @Setter
 @Builder
@@ -21,11 +21,11 @@ public class CareerEntity {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 }

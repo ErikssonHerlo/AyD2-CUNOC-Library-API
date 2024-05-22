@@ -21,7 +21,7 @@ public record User (
         this(
                 userEntity.getUsername(),
                 userEntity.getFullName(),
-                userEntity.getCarreer() != null ? new Carreer(userEntity.getCarreer()) : null,
+                userEntity.getCareer() != null ? new Carreer(userEntity.getCareer()) : null,
                 userEntity.getRole(),
                 userEntity.getDob(),
                 userEntity.getPassword(),
