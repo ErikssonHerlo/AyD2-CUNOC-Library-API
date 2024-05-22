@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserUseCase userUseCase;
 
-    @CrossOrigin()
+    @CrossOrigin(origins = "", allowedHeaders = "")
     @GetMapping("/info")
     public ApiResponse<UserResponseDTO> getUserInfo(Authentication authentication){
         return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.getUserInfo(authentication));

@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "", allowedHeaders = "")
 public class AuthController {
 
     private final AuthUseCase authUseCase;
 
-    @CrossOrigin()
+
     @PostMapping(value = "login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginDTO request)
     {
