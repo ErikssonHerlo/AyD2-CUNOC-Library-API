@@ -13,7 +13,7 @@ public class LoanScheduler {
         this.loanUseCase = loanUseCase;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Ejecuta a medianoche todos los días
+    @Scheduled(cron = "0 */10 * * * ?") // Ejecuta cada 10 minutos
     public void checkLoansInDefault() {
         loanUseCase.checkLoansInDefault();
         System.out.println("Checked loans in default.");
