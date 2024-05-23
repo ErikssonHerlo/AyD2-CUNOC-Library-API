@@ -1,6 +1,7 @@
 package com.cunoc.library.application.usecases;
 
 import com.cunoc.library.adapters.out.CareerDAOAdapter;
+import com.cunoc.library.adapters.out.UserDAOAdapter;
 import com.cunoc.library.application.dao.CareerDAO;
 import com.cunoc.library.application.dto.CareerDTO;
 import com.cunoc.library.application.dto.CareerResponseDTO;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class CareerUseCase {
     private final CareerDAO careerDAO;
     private final CareerDAOAdapter careerDAOAdapter;
+    private final UserDAOAdapter userDAOAdapter;
 
     public Optional<CareerResponseDTO> findById(String code) {
         var career = careerDAO.findByCode(code);
@@ -57,6 +59,9 @@ public class CareerUseCase {
         try {
             var existingCareer = careerDAO.find(code);
             if(!existingCareer.isPresent()) throw new ResourceNotFoundException("Career", "code", code);
+            if(userDAOAdapter.existsByCareerCode(code)) {
+                throw new IllegalArgumentException("Cannot delete career because it is referenced by users");
+            }
             careerDAO.deleteById(code);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

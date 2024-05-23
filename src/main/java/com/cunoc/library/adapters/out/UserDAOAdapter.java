@@ -124,6 +124,9 @@ public class UserDAOAdapter implements UserDAO {
         userRepository.deleteById(username);
     }
 
+    public boolean existsByCareerCode(String careerCode) {
+        return userRepository.existsByCareerCode(careerCode);
+    }
     private UserResponseDTO mapToResponseDTO(UserEntity userEntity) {
         return new UserResponseDTO(
                 userEntity.getUsername(),

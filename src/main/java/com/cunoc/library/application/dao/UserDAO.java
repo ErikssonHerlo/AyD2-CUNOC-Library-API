@@ -23,4 +23,6 @@ public interface UserDAO {
     UserResponseDTO saveUser(RegisterDTO user, PasswordEncoder passwordEncoder);
     UserResponseDTO updateUser(UserEntity user, UserUpdateDTO input, PasswordEncoder passwordEncoder);
     void deleteUser(String username);
+
+    boolean existsByCareerCode(String careerCode);
 }
