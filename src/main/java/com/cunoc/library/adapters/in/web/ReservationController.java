@@ -22,6 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/v1/reservation")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReservationController {
 
     private final ReservationUseCase reservationUseCase;
