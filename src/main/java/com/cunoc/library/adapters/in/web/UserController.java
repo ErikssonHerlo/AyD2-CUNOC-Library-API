@@ -54,4 +54,10 @@ public class UserController {
         return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.getAllUsers());
     }
 
+    @PreAuthorize("hasAuthority('librarian')")
+    @GetMapping("/role/{roleName}")
+    public ApiResponse<UserResponseDTO> getUsersByRole(@PathVariable String roleName){
+        return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.getUsersByRole(roleName));
+    }
+
 }

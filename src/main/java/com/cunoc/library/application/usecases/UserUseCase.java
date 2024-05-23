@@ -6,6 +6,7 @@ import com.cunoc.library.application.dto.UserResponseDTO;
 import com.cunoc.library.application.dto.UserUpdateDTO;
 import com.cunoc.library.domain.models.User;
 import com.cunoc.library.application.dao.UserDAO;
+import com.cunoc.library.domain.models.enums.Role;
 import com.cunoc.library.infraestructure.exceptions.BadRequestException;
 import com.cunoc.library.infraestructure.exceptions.ResourceAlreadyExistsException;
 import com.cunoc.library.infraestructure.exceptions.ResourceNotFoundException;
@@ -53,6 +54,15 @@ public class UserUseCase {
             if(!user.isPresent()) throw new ResourceNotFoundException("user","username",username);
             return user;
         }catch (Exception e){
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    public List<UserResponseDTO> getUsersByRole(String roleName){
+        try {
+            if (!Role.contains(roleName)) throw new ResourceNotFoundException("Role", "name", roleName);
+            return userDao.getUsersByRole(roleName);
+        } catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
     }
