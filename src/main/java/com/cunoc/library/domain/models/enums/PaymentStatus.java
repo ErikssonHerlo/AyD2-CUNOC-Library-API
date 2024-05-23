@@ -1,12 +1,12 @@
 package com.cunoc.library.domain.models.enums;
 
-public enum PaymentState {
+public enum PaymentStatus {
     pending,
     paid;
 
     public static boolean contains(String value) {
-        for (PaymentState state : PaymentState.values()) {
-            if (state.name().equalsIgnoreCase(value)) {
+        for (PaymentStatus status : PaymentStatus.values()) {
+            if (status.name().equalsIgnoreCase(value)) {
                 return true;
             }
         }

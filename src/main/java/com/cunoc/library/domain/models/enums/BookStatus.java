@@ -1,12 +1,12 @@
 package com.cunoc.library.domain.models.enums;
 
-public enum BookState {
+public enum BookStatus {
     available,
     not_available;
 
     public static boolean contains(String value) {
-        for (BookState state : BookState.values()) {
-            if (state.name().equalsIgnoreCase(value)) {
+        for (BookStatus status : BookStatus.values()) {
+            if (status.name().equalsIgnoreCase(value)) {
                 return true;
             }
         }

@@ -49,7 +49,7 @@ public class UserController {
 
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ApiResponse<UserResponseDTO> getAllUsers(){
         return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.getAllUsers());
     }

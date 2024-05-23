@@ -1,12 +1,12 @@
 package com.cunoc.library.domain.models.enums;
 
-public enum NotificationState {
+public enum NotificationStatus {
     read,
     unread;
 
     public static boolean contains(String value) {
-        for (NotificationState state : NotificationState.values()) {
-            if (state.name().equalsIgnoreCase(value)) {
+        for (NotificationStatus status : NotificationStatus.values()) {
+            if (status.name().equalsIgnoreCase(value)) {
                 return true;
             }
         }
