@@ -13,15 +13,15 @@ public class ReservationScheduler {
         this.reservationUseCase = reservationUseCase;
     }
 
-    @Scheduled(cron = "0 */5 * * * ?") // Ejecuta cada 5 minutos
-    // Para efectos de la prueba, se ejecutará cada 5 minutos
+    @Scheduled(cron = "0 */10 * * * ?") // Ejecuta cada 10 minutos
+    // Para efectos de la prueba, se ejecutará cada 10 minutos
     public void checkExpiredReservations() {
         System.out.println("Job started checkExpiredReservations");
         reservationUseCase.expireReservationsForAvailableBooks();
         System.out.println("Job finished checkExpiredReservations");
     }
 
-    @Scheduled(cron = "0 */5 * * * ?") // Ejecuta cada 5 minutos
+    @Scheduled(cron = "0 */10 * * * ?") // Ejecuta cada 10 minutos
     public void notifyUsersOfAvailableBooks() {
         System.out.println("Job started notifyUsersOfAvailableBooks");
         reservationUseCase.checkAndNotifyUsersForAvailableBooks();
