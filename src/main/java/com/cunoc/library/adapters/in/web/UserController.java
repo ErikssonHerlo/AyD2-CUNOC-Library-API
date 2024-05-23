@@ -5,6 +5,7 @@ import com.cunoc.library.application.dto.UserResponseDTO;
 import com.cunoc.library.application.dto.UserUpdateDTO;
 import com.cunoc.library.application.payload.ApiResponse;
 import com.cunoc.library.application.usecases.UserUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('librarian')")
     @PostMapping()
-    public ApiResponse<UserResponseDTO> saveUser (@RequestBody RegisterDTO user){
+    public ApiResponse<UserResponseDTO> saveUser (@RequestBody @Valid RegisterDTO user){
         return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.saveUser(user));
     }
 
 
     @PutMapping("/{username}")
-    public ApiResponse<UserResponseDTO> updateUser(@PathVariable String username, @RequestBody UserUpdateDTO user){
+    public ApiResponse<UserResponseDTO> updateUser(@PathVariable String username, @RequestBody @Valid UserUpdateDTO user){
         return new ApiResponse(HttpStatus.OK.value(),"Success", HttpStatus.OK,userUseCase.updateUser(username,user));
     }
 

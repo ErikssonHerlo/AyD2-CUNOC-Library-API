@@ -6,17 +6,17 @@ import jakarta.validation.constraints.*;
 import java.util.Date;
 
 public record BookDTO(
-        @NotEmpty(message = "El código ISBN es obligatorio")
+        @NotBlank(message = "El código ISBN es obligatorio")
         @NotNull(message = "El código ISBN es obligatorio")
-        @Size(min = 10, max = 11, message = "El código ISBN debe tener entre 10 y 11 caracteres")
+        @Size(min = 10, max = 13, message = "El código ISBN debe tener entre 10 y 13 caracteres")
         String isbn_code,
 
-        @NotEmpty(message = "El título es obligatorio")
+        @NotBlank(message = "El título es obligatorio")
         @NotNull(message = "El título es obligatorio")
         @Size(min = 3, max = 255, message = "El título debe tener entre 3 y 255 caracteres")
         String title,
 
-        @NotEmpty(message = "El autor es obligatorio")
+        @NotBlank(message = "El autor es obligatorio")
         @NotNull(message = "El autor es obligatorio")
         @Size(min = 3, max = 255, message = "El autor debe tener entre 3 y 255 caracteres")
         String author,

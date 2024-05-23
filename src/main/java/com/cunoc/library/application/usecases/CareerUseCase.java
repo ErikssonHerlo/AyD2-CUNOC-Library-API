@@ -9,6 +9,8 @@ import com.cunoc.library.application.dto.CareerUpdateDTO;
 import com.cunoc.library.infraestructure.exceptions.BadRequestException;
 import com.cunoc.library.infraestructure.exceptions.ResourceAlreadyExistsException;
 import com.cunoc.library.infraestructure.exceptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,19 +42,30 @@ public class CareerUseCase {
         return careerDAO.findAll(pageable);
     }
 
-    public CareerResponseDTO save(CareerDTO careerRequestDTO) {
-        var is_exist = careerDAO.find(careerRequestDTO.code());
-        if (is_exist.isPresent()) {
-            throw new ResourceAlreadyExistsException("Career", "code", careerRequestDTO.code());
+    @Transactional
+    public CareerResponseDTO save(@Valid CareerDTO careerRequestDTO) {
+        try {
+            var is_exist = careerDAO.find(careerRequestDTO.code());
+            if (is_exist.isPresent()) {
+                throw new ResourceAlreadyExistsException("Career", "code", careerRequestDTO.code());
+            }
+            return careerDAO.save(careerRequestDTO);
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
         }
-        return careerDAO.save(careerRequestDTO);
-
     }
 
-    public CareerResponseDTO update(String code, CareerUpdateDTO careerRequestDTO) {
-        var career = careerDAO.find(code);
-        if(!career.isPresent()) throw new ResourceNotFoundException("Career", "code", code);
-        return careerDAO.update(code, careerRequestDTO);
+    @Transactional
+    public CareerResponseDTO update(@Valid String code, CareerUpdateDTO careerRequestDTO) {
+        try{
+            var is_exist = careerDAO.find(code);
+            if (!is_exist.isPresent()) {
+                throw new ResourceNotFoundException("Career", "code", code);
+            }
+            return careerDAO.update(code, careerRequestDTO);
+        } catch (Exception e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
     public ResponseEntity<?> deleteById(String code) {
