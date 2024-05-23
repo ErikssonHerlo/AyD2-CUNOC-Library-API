@@ -136,9 +136,9 @@ public class ReservationUseCase {
                 var book = bookDAO.findByIsbnCode(reservation.isbn_code())
                         .orElseThrow(() -> new ResourceNotFoundException("Book", "isbn_code", reservation.isbn_code()));
 
-                if (book.status() == BookStatus.available && new Date().getTime() - reservation.reservation_date().getTime() > 180000) {
-                    // 180000ms = 3 minutos
-                    // Si la reserva lleva más de 3 minutos en estado activo, se considera expirada.
+                if (book.status() == BookStatus.available && new Date().getTime() - reservation.reservation_date().getTime() > 300000) {
+                    // 300000ms = 5 minutos
+                    // Si la reserva lleva más de 5 minutos en estado activo, se considera expirada.
                     reservationDAO.updateStatus(reservation.id(), ReservationStatus.expired);
                     System.out.println("La reserva con ID " + reservation.id() + " ha expirado a las " + new Date().toString() + ".");
                 }
