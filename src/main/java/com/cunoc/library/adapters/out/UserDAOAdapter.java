@@ -40,6 +40,13 @@ public class UserDAOAdapter implements UserDAO {
     }
 
     @Override
+    public List<UserResponseDTO> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
+    @Override
     public Optional<UserResponseDTO> findUserByUsername(String username) {
         return userRepository.findUserByUsername(username).map(this::mapToResponseDTO);
     }

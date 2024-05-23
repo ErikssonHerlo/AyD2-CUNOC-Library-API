@@ -16,6 +16,7 @@ public interface UserDAO {
     Optional<UserEntity> find(String username);
      Optional<UserResponseDTO> findUserByUsername(String username); // Cambiado a UserResponseDTO
     List<UserResponseDTO> getUserByRoleAndName(String roleName, String name);
+    List<UserResponseDTO> findAllUsers();
     List<UserResponseDTO> getUsersByRole(String roleName);
     Page<UserResponseDTO> findAllUsers(Pageable pageable);
     UserResponseDTO saveUser(RegisterDTO user, PasswordEncoder passwordEncoder);
