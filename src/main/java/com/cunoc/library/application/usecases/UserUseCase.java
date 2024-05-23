@@ -10,6 +10,7 @@ import com.cunoc.library.domain.models.enums.Role;
 import com.cunoc.library.infraestructure.exceptions.BadRequestException;
 import com.cunoc.library.infraestructure.exceptions.ResourceAlreadyExistsException;
 import com.cunoc.library.infraestructure.exceptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,28 +68,35 @@ public class UserUseCase {
         }
     }
 
+    @Transactional
     public UserResponseDTO saveUser(RegisterDTO request) {
-        if(request.career_code()!= null && request.career_code().isEmpty())
+        try
         {
-            var careerExists = careerDAO.find(request.career_code()).isPresent();
-            if(careerExists) throw new ResourceNotFoundException("career", "career_code", request.career_code());
+            if(request.career_code()!= null && request.career_code().isEmpty())
+            {
+                var careerExists = careerDAO.find(request.career_code()).isPresent();
+                if(careerExists) throw new ResourceNotFoundException("career", "career_code", request.career_code());
+            }
+            var isPresent = userDao.findUserByUsername(request.username()).isPresent();
+            if(isPresent) throw new ResourceAlreadyExistsException("user","username",request.username());
+            return userDao.saveUser(request,passwordEncoder);
+        } catch (Exception e){
+            throw new BadRequestException(e.getMessage());
         }
-        var isPresent = userDao.findUserByUsername(request.username()).isPresent();
-        if(isPresent) throw new ResourceAlreadyExistsException("user","username",request.username());
-        return userDao.saveUser(request,passwordEncoder);
     }
 
+    @Transactional
     public UserResponseDTO updateUser(String username, UserUpdateDTO updateUserDTO) throws ResourceNotFoundException {
         try{
             var existingUser = userDao.find(username);
             if(!existingUser.isPresent()) throw new ResourceNotFoundException("user","username",username);
             return userDao.updateUser(existingUser.get(),updateUserDTO, passwordEncoder);
-
-        }catch (Exception e){
+        } catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }
     }
 
+    @Transactional
     public ResponseEntity<?> deleteUser(String username) throws ResourceNotFoundException {
         try{
             var existingUser = userDao.find(username);
