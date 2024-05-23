@@ -30,7 +30,6 @@ public record BookDTO(
 
         String cover_image,
 
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "La fecha de nacimiento debe estar en el formato YYYY-MM-DD")
         Date publication_date,
 
         String editorial,
