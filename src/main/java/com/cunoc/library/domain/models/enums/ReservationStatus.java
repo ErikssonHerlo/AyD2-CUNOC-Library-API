@@ -1,13 +1,13 @@
 package com.cunoc.library.domain.models.enums;
 
-public enum ReservationState {
+public enum ReservationStatus {
     active,
     expired,
     canceled;
 
     public static boolean contains(String value) {
-        for (ReservationState state : ReservationState.values()) {
-            if (state.name().equalsIgnoreCase(value)) {
+        for (ReservationStatus status : ReservationStatus.values()) {
+            if (status.name().equalsIgnoreCase(value)) {
                 return true;
             }
         }

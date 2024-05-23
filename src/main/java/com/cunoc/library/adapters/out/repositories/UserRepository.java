@@ -24,6 +24,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String>{
             nativeQuery = true)
     List<UserEntity> getUsersByRole(@Param("roleName") String roleName);
 
-
+    boolean existsByCareerCode(String careerCode);
 
 }
