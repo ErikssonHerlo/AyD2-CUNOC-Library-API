@@ -7,6 +7,7 @@ import com.cunoc.library.application.dto.CareerResponseDTO;
 import com.cunoc.library.application.payload.ApiResponse;
 import com.cunoc.library.application.payload.PaginatedResponse;
 import com.cunoc.library.application.usecases.BookUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
@@ -55,12 +56,12 @@ public class BookController {
 
     @PreAuthorize("hasAuthority('librarian')")
     @PostMapping
-    public ApiResponse<BookResponseDTO> saveBook(@RequestBody BookDTO book) {
+    public ApiResponse<BookResponseDTO> saveBook(@RequestBody @Valid BookDTO book) {
         return new ApiResponse<>(HttpStatus.OK.value(), "Success", HttpStatus.OK, bookUseCase.saveBook(book));
     }
 
     @PutMapping("/{ISBNCode}")
-    public ApiResponse<BookResponseDTO> updateBook(@PathVariable String ISBNCode, @RequestBody BookUpdateDTO book) {
+    public ApiResponse<BookResponseDTO> updateBook(@PathVariable String ISBNCode, @RequestBody @Valid BookUpdateDTO book) {
         return new ApiResponse<>(HttpStatus.OK.value(), "Success", HttpStatus.OK, bookUseCase.updateBook(ISBNCode, book));
     }
 
