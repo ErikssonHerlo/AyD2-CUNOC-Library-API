@@ -22,7 +22,6 @@ public record RegisterDTO(
         @NotNull(message = "El rol es obligatorio")
         Role role,
 
-        @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "La fecha de nacimiento debe estar en el formato YYYY-MM-DD")
         String dob,
 
         @NotBlank(message = "La contraseña es obligatoria")
