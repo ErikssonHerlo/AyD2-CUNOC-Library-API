@@ -39,7 +39,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        username=jwtService.getUsernameFromToken(token);
+
+        try {
+            username = jwtService.getUsernameFromToken(token);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acceso prohibido: Token JWT no válido");
+            return;
+        }
 
         if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null)
         {
