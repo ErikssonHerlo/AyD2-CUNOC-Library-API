@@ -60,6 +60,7 @@ public class BookController {
         return new ApiResponse<>(HttpStatus.OK.value(), "Success", HttpStatus.OK, bookUseCase.saveBook(book));
     }
 
+    @PreAuthorize("hasAuthority('librarian')")
     @PutMapping("/{ISBNCode}")
     public ApiResponse<BookResponseDTO> updateBook(@PathVariable String ISBNCode, @RequestBody @Valid BookUpdateDTO book) {
         return new ApiResponse<>(HttpStatus.OK.value(), "Success", HttpStatus.OK, bookUseCase.updateBook(ISBNCode, book));
