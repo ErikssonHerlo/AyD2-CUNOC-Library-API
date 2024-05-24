@@ -1,0 +1,303 @@
+Claro, a continuación se presentan las consultas SQL para cada uno de los reportes solicitados. Estas consultas se basan en la estructura de las tablas que proporcionaste y asumen que los datos están relacionados de manera adecuada.
+
+### 1. Listado de préstamos de libros que deben ser entregados el día actual
+
+```sql
+SELECT
+    l.id AS loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.user_username,
+    u.full_name AS user_full_name,
+    l.loan_date,
+    l.return_date,
+    l.status
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+WHERE
+    l.return_date = CURDATE() AND l.status = 'lent';
+```
+
+### 2. Listado de préstamos de libros que están en mora
+
+```sql
+SELECT
+    l.id AS loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.user_username,
+    u.full_name AS user_full_name,
+    l.loan_date,
+    l.return_date,
+    l.status
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+WHERE
+    l.status = 'in_default';
+```
+
+### 3. Total de dinero recaudado en un intervalo de tiempo, incluyendo un listado con los préstamos realizados en ese intervalo de tiempo
+
+```sql
+SELECT
+    p.id AS payment_id,
+    p.loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.user_username,
+    u.full_name AS user_full_name,
+    l.loan_date,
+    l.return_date,
+    p.payment_amount,
+    p.default_amount,
+    p.total_amount,
+    p.payment_date,
+    p.status
+FROM
+    CUNOC_LIBRARY.payment p
+JOIN
+    CUNOC_LIBRARY.loan l ON p.loan_id = l.id
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+WHERE
+    p.payment_date BETWEEN '2024-05-01' AND '2024-05-31';
+
+-- Total recaudado
+SELECT
+    SUM(p.total_amount) AS total_recaudado,
+    SUM(p.default_amount) AS total_mora,
+    SUM(p.payment_amount) AS total_prestamo
+FROM
+    CUNOC_LIBRARY.payment p
+WHERE
+    p.payment_date BETWEEN '2024-05-01' AND '2024-05-31';
+```
+
+### 4. Reporte indicando cuál es la carrera que tiene más registros de préstamos en un intervalo de tiempo
+
+```sql
+SELECT
+    u.career_code,
+    c.name AS career_name,
+    COUNT(l.id) AS total_prestamos
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+JOIN
+    CUNOC_LIBRARY.career c ON u.career_code = c.code
+WHERE
+    l.loan_date BETWEEN '2024-05-01' AND '2024-05-31'
+GROUP BY
+    u.career_code, c.name
+ORDER BY
+    total_prestamos DESC
+LIMIT 1;
+
+-- Listado con los préstamos de estudiantes de esa carrera
+SELECT
+    l.id AS loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.user_username,
+    u.full_name AS user_full_name,
+    u.career_code,
+    c.name AS career_name,
+    l.loan_date,
+    l.return_date,
+    l.status
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+JOIN
+    CUNOC_LIBRARY.career c ON u.career_code = c.code
+WHERE
+    u.career_code = (SELECT u.career_code
+                     FROM CUNOC_LIBRARY.loan l
+                     JOIN CUNOC_LIBRARY.user u ON l.user_username = u.username
+                     WHERE l.loan_date BETWEEN '2024-05-01' AND '2024-05-31'
+                     GROUP BY u.career_code
+                     ORDER BY COUNT(l.id) DESC
+                     LIMIT 1)
+  AND l.loan_date BETWEEN '2024-05-01' AND '2024-05-31';
+```
+
+### 5. Listado de las moras que un estudiante ha pagado en un intervalo de tiempo
+
+```sql
+SELECT
+    p.id AS payment_id,
+    p.loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.user_username,
+    u.full_name AS user_full_name,
+    p.default_amount,
+    p.payment_date,
+    p.total_amount,
+    p.status
+FROM
+    CUNOC_LIBRARY.payment p
+JOIN
+    CUNOC_LIBRARY.loan l ON p.loan_id = l.id
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+WHERE
+    u.username = 'student1' -- Reemplazar con el username del estudiante
+  AND p.payment_date BETWEEN '2024-05-01' AND '2024-05-31'
+  AND p.default_amount > 0;
+
+-- Listado con los préstamos morosos del estudiante
+SELECT
+    l.id AS loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.loan_date,
+    l.return_date,
+    l.status
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+WHERE
+    l.user_username = 'student1' -- Reemplazar con el username del estudiante
+  AND l.status = 'in_default'
+  AND l.loan_date BETWEEN '2024-05-01' AND '2024-05-31';
+```
+
+### 6. El estudiante que más préstamos ha realizado en un intervalo de tiempo
+
+```sql
+SELECT
+    l.user_username,
+    u.full_name AS user_full_name,
+    COUNT(l.id) AS total_prestamos
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.user u ON l.user_username = u.username
+WHERE
+    l.loan_date BETWEEN '2024-05-01' AND '2024-05-31'
+GROUP BY
+    l.user_username, u.full_name
+ORDER BY
+    total_prestamos DESC
+LIMIT 1;
+
+-- Listado con todos los préstamos realizados por el estudiante
+SELECT
+    l.id AS loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.loan_date,
+    l.return_date,
+    l.status
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+WHERE
+    l.user_username = (SELECT l.user_username
+                       FROM CUNOC_LIBRARY.loan l
+                       WHERE l.loan_date BETWEEN '2024-05-01' AND '2024-05-31'
+                       GROUP BY l.user_username
+                       ORDER BY COUNT(l.id) DESC
+                       LIMIT 1);
+```
+
+### 7. Listado de los libros que están prestados actualmente a un estudiante
+
+```sql
+SELECT
+    l.id AS loan_id,
+    l.book_ISBN_code,
+    b.title AS book_title,
+    l.loan_date,
+    l.return_date,
+    l.status
+FROM
+    CUNOC_LIBRARY.loan l
+JOIN
+    CUNOC_LIBRARY.book b ON l.book_ISBN_code = b.ISBN_code
+WHERE
+    l.user_username = 'student1' -- Reemplazar con el username del estudiante
+  AND l.status = 'lent';
+```
+
+### 8. Listado de libros cuyas copias están agotadas actualmente
+
+```sql
+SELECT
+    b.ISBN_code,
+    b.title AS book_title,
+    b.author,
+    b.editorial,
+    b.description,
+    b.cover_image,
+    b.publication_date,
+    b.quantity,
+    b.status
+FROM
+    CUNOC_LIBRARY.book b
+WHERE
+    b.quantity = 0;
+```
+
+### 9. Listado de libros que nunca se han prestado
+
+```sql
+SELECT
+    b.ISBN_code,
+    b.title AS book_title,
+    b.author,
+    b.editorial,
+    b.description,
+    b.cover_image,
+    b.publication_date,
+    b.quantity,
+    b.status
+FROM
+    CUNOC_LIBRARY.book b
+LEFT JOIN
+    CUNOC_LIBRARY.loan l ON b.ISBN_code = l.book_ISBN_code
+WHERE
+    l.book_ISBN_code IS NULL;
+```
+
+### 10. Listado de estudiantes que están en sanción
+
+```sql
+SELECT
+    u.username,
+    u.full_name,
+    SUM(p.total_amount) AS total_amount_due
+FROM
+    CUNOC_LIBRARY.user u
+JOIN
+    CUNOC_LIBRARY.loan l ON u.username = l.user_username
+JOIN
+    CUNOC_LIBRARY.payment p ON l.id = p.loan_id
+WHERE
+    l.status = 'in_default'
+GROUP BY
+    u.username, u.full_name;
+
+-- Listado de los libros de cada estudiante sancionado
+SELECT
+    l.id AS loan_id,
+    l.book
